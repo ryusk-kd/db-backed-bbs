@@ -1,4 +1,5 @@
 kaiwadb.sql
+dbsettings.json
 
 .vscode/*
 #!.vscode/settings.json

@@ -1,10 +1,13 @@
 <?php
+$jsonString = file_get_contents(dirname(__FILE__) . '/dbsettings.json');
+$data = json_decode($jsonString, true);
+
 // DB名
-define('DB_DATABASE', 'kaiwaDB');
+define('DB_DATABASE', $data['database']);
 // MySQLのユーザー名
-define('DB_USERNAME', 'kaiwa');
+define('DB_USERNAME', $data['username']);
 // MySQLのログインパスワード
-define('DB_PASSWORD', 'kaiwa');
+define('DB_PASSWORD', $data['password']);
 // DSN
 define('PDO_DSN', 'mysql:host=localhost;charset=utf8;dbname=' . DB_DATABASE);
 
@@ -22,6 +25,7 @@ function db_connect()
         return $pdo;
     } catch (PDOException $e) {
         echo 'Error: ' . $e->getMessage();
+        echo PDO_DSN;
         die();
     }
 }

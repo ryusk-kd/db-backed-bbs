@@ -1,29 +1,35 @@
 <?php
 // debug
-ini_set('display_errors', 'On');
+// ini_set('display_errors', 'On');
 
 // include db_connect.php
 require '../db_connect.php';
 
 // include function.php
 require '../function.php';
-/*
-$pdo = db_connect();
-$stmt = $pdo->prepare('select * from users');
-$stmt->execute();
-$results = $stmt->fetchAll();
-$table = '<table>';
-foreach ($results as $row) {
-    $table .= '<tr>';
-    foreach ($row as $column) {
-        $table .= '<td>' . $column;
+
+if (isset($_POST) && !empty($_POST)) {
+    // validate input data
+    $username = htmlspecialchars($_POST['username']);
+    $hashedPassword = password_hash($_POST['password'], PASSWORD_DEFAULT);
+
+    // check username
+    $pdo = db_connect();
+    $stmt = $pdo->prepare('select count(*) from users where username = :username');
+    $stmt->bindValue(':username', $username);
+    $stmt->execute();
+    $count = $stmt->fetchColumn();
+    if ($count > 0) {
+        echo 'Username is already taken.<br>';
+    } else {
+        // insert new user into database and redirect to login page if successful
+        $stmt = $pdo->prepare('insert into users (username, pwhash) values (:username, :hashedPassword)');
+        $stmt->bindValue(':username', $username);
+        $stmt->bindValue(':hashedPassword', $hashedPassword);
+        $stmt->execute();
+        echo 'New user created. Redirecting to login page.<br>';
+        header("refresh:5;url=../login");
     }
-}
-$table .= '</table>';
-*/
-if ($_POST) {
-    var_dump($_POST);
-    header("refresh:5;url=index.php");
 }
 ?>
 
@@ -47,7 +53,6 @@ if ($_POST) {
 
         <input type="submit" value="Sign Up">
     </form>
-
 </body>
 
 </html>

@@ -1,3 +1,5 @@
 # bbs-use-db
 a bbs using DB.
-## feature-signup
+## features
+- signup
+- login

@@ -12,6 +12,7 @@ if (isset($_POST) && !empty($_POST)) {
     // validate input data
     $username = htmlspecialchars($_POST['username']);
     $hashedPassword = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $length = mb_strlen($username);
 
     // check username
     $pdo = db_connect();
@@ -21,6 +22,8 @@ if (isset($_POST) && !empty($_POST)) {
     $count = $stmt->fetchColumn();
     if ($count > 0) {
         echo 'Username is already taken.<br>';
+    } else if ($length > 24) {
+        echo 'Username is too long. Username must be less than 24 characters.<br>';
     } else {
         // insert new user into database and redirect to login page if successful
         $stmt = $pdo->prepare('insert into users (username, pwhash) values (:username, :hashedPassword)');
@@ -49,7 +52,7 @@ if (isset($_POST) && !empty($_POST)) {
         <input type="text" id="username" name="username" required><br>
 
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br>
+        <input type="password" id="password" name="password" required minlength="8"><br>
 
         <input type="submit" value="Sign Up">
     </form>

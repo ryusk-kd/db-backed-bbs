@@ -1,7 +1,4 @@
 <?php
-// debug
-ini_set('display_errors', 'On');
-
 // include db_connect.php
 require '../db_connect.php';
 

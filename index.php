@@ -31,8 +31,8 @@ foreach ($fetchedTopics as $topic) {
     $title = $topic['title'];
     $outline = $topic['content'];
     $id = $topic['topic_id'];
-    $topics .= '<li href="./topic/?id=' . $id . '">' .
-        '<h2>' . $title . '</h2>' . '<p>' . $outline . '</p>' . '</li>';
+    $topics .= '<li><a href="./topic/?id=' . $id . '">' .
+        '<h2>' . $title . '</h2>' . '<p>' . $outline . '</p>' . '</a></li>';
 }
 $topics .= '</ul>';
 ?>

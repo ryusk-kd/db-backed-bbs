@@ -25,12 +25,14 @@ $stmt->execute();
 // fetch posts
 $fetchedPosts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $posts = '';
+$postNumber = 1;
 foreach ($fetchedPosts as $post) {
     $posts .= '<p class="post">' .
-        '<span class="post_id">' . $post['post_id'] . ': </span>' .
+        '<span class="post_number">' . $postNumber . ': </span>' .
         '<span class="date">' . $post['created_at'] . ' </span>' .
         '<span class="content">' . $post['content'] . ' </span>' .
         '</p>';
+    $postNumber++;
 }
 
 // check $_POST

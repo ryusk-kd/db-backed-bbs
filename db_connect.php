@@ -9,7 +9,7 @@ define('DB_USERNAME', $data['username']);
 // MySQLのログインパスワード
 define('DB_PASSWORD', $data['password']);
 // DSN
-define('PDO_DSN', 'mysql:host=localhost;charset=utf8;dbname=' . DB_DATABASE);
+define('PDO_DSN', 'mysql:host=localhost;charset=utf8mb4;dbname=' . DB_DATABASE);
 
 /**
  * DBの接続設定をしたPDOインスタンスを返却する

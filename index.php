@@ -10,13 +10,17 @@ $pdo = db_connect();
 
 // check $_POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // sanitize title and content in $_POST
+    $_POST['title'] = htmlspecialchars($_POST['title']);
+    $_POST['content'] = htmlspecialchars($_POST['content']);
+
     // insert post
     $stmt = $pdo->prepare('insert into topics (title, content) values (:title, :content)');
     $stmt->bindValue(':title', $_POST['title']);
     $stmt->bindValue(':content', $_POST['content']);
     $stmt->execute();
 
-    // get post id
+    // get post id and redirect to the topic page
     $post_id = $pdo->lastInsertId();
     header('Location: ./topic/?id=' . $post_id);
     exit();

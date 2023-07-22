@@ -8,6 +8,18 @@ require '../function.php';
 // connect to db
 $pdo = db_connect();
 
+// check $_POST
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // sanitize $_POST['content']
+    $_POST['content'] = htmlspecialchars($_POST['content']);
+    $stmt = $pdo->prepare('insert into posts (topic_id, content) values (:topic_id, :content)');
+    $stmt->bindValue(':topic_id', $_GET['id']);
+    $stmt->bindValue(':content', $_POST['content']);
+    $stmt->execute();
+    header('Location: index.php?id=' . $_GET['id']);
+    exit();
+}
+
 // get topic
 $stmt = $pdo->prepare('select * from topics where topic_id = :id');
 $stmt->bindValue(':id', $_GET['id']);
@@ -15,7 +27,6 @@ $stmt->execute();
 $topic = $stmt->fetch(PDO::FETCH_ASSOC);
 $title = $topic['title'];
 $outline = $topic['content'];
-
 
 // load posts
 $stmt = $pdo->prepare('select post_id, content, created_at from posts where topic_id = :topic_id');
@@ -34,17 +45,6 @@ foreach ($fetchedPosts as $post) {
         '</p>';
     $postNumber++;
 }
-
-// check $_POST
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $stmt = $pdo->prepare('insert into posts (topic_id, content) values (:topic_id, :content)');
-    $stmt->bindValue(':topic_id', $_GET['id']);
-    $stmt->bindValue(':content', $_POST['content']);
-    $stmt->execute();
-    header('Location: index.php?id=' . $_GET['id']);
-    exit();
-}
-
 ?>
 
 

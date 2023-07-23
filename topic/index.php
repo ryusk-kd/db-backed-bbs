@@ -1,9 +1,15 @@
 <?php
-// include db_connect.php
+// include db_connect.php, function.php
 require '../db_connect.php';
-
-// include function.php
 require '../function.php';
+
+// check login status
+session_start();
+if (!isset($_SESSION['user_name'])) {
+    $navlink = '<li><a href="../login">ログイン</a></li>';
+} else {
+    $navlink = '<li><a href="../logout">ログアウト</a></li>';
+}
 
 // connect to db
 $pdo = db_connect();
@@ -63,6 +69,7 @@ foreach ($fetchedPosts as $post) {
 <body>
     <nav id="verticalnav">
         <ul>
+            <?php echo $navlink; ?>
             <li><a href="../index.php">Topics</a></li>
             <li><a href="#post">post</a></li>
         </ul>

@@ -1,18 +1,25 @@
 <?php
-// include db_connect.php
+// include db_connect.php, function.php
 require '../db_connect.php';
-
-// include function.php
 require '../function.php';
 
-if (isset($_POST) && !empty($_POST)) {
-    // validate input data
+// Session start and Unset $_SESSION['user_name']
+session_start();
+unset($_SESSION['user_name']);
+
+// db connect
+$pdo = db_connect();
+
+// check $_POST
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // sanitize username; username must be less than 24 characters
     $username = htmlspecialchars($_POST['username']);
-    $hashedPassword = password_hash($_POST['password'], PASSWORD_DEFAULT);
     $length = mb_strlen($username);
 
+    // get hashed password
+    $hashedPassword = password_hash($_POST['password'], PASSWORD_DEFAULT);
+
     // check username
-    $pdo = db_connect();
     $stmt = $pdo->prepare('select count(*) from users where username = :username');
     $stmt->bindValue(':username', $username);
     $stmt->execute();
@@ -40,10 +47,16 @@ if (isset($_POST) && !empty($_POST)) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Sign Up</title>
 </head>
 
 <body>
+    <nav id="verticalnav">
+        <ul>
+            <li><a href="../login">Log in</a></li>
+            <li><a href="../">Topics</a></li>
+        </ul>
+    </nav>
     <form method="post">
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required><br>

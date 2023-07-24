@@ -6,7 +6,8 @@ require '../function.php';
 // check login status
 session_start();
 if (!isset($_SESSION['user_name'])) {
-    $navlink = '<li><a href="../login">ログイン</a></li>';
+    $navlink = '<li><a href="../login">ログイン</a></li>' .
+        '<li><a href="../signup">新規登録</a></li>';
 } else {
     $navlink = '<li><a href="../logout">ログアウト</a></li>';
 }
@@ -70,8 +71,8 @@ foreach ($fetchedPosts as $post) {
     <nav id="verticalnav">
         <ul>
             <?php echo $navlink; ?>
-            <li><a href="../index.php">Topics</a></li>
-            <li><a href="#post">post</a></li>
+            <li><a href="../index.php">話題一覧</a></li>
+            <li><a href="#post">コメント</a></li>
         </ul>
     </nav>
     <div id="topic">
@@ -80,6 +81,7 @@ foreach ($fetchedPosts as $post) {
         <?php echo $posts; ?>
     </div>
     <hr>
+    <h2>コメント</h2>
     <div id="post">
         <form action="" method="post">
             <input type="hidden" name="topic_id" value="<?php echo $_GET['id']; ?>">

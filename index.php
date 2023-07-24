@@ -6,7 +6,8 @@ require 'function.php';
 // check login status
 session_start();
 if (!isset($_SESSION['user_name'])) {
-    $navlink = '<li><a href="login">ログイン</a></li>';
+    $navlink = '<li><a href="login">ログイン</a></li>' .
+        '<li><a href="signup">新規登録</a></li>';
 } else {
     $navlink = '<li><a href="logout">ログアウト</a></li>';
 }
@@ -54,20 +55,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Topics</title>
+    <title>話題一覧</title>
 </head>
 
 <body>
     <nav id="verticalnav">
         <ul>
             <?php echo $navlink; ?>
-            <li><a href="#post">スレ立て</a></li>
+            <li><a href="#post">新しい話題</a></li>
         </ul>
     </nav>
-    <h1>Topics</h1>
+    <h1>話題一覧</h1>
     <div id="topics">
         <?php echo $topics; ?>
     </div>
+    <hr>
+    <h2>新しい話題</h2>
     <div id="post">
         <form action="" method="post">
             <p>

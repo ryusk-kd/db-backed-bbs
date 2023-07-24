@@ -2,7 +2,7 @@
 // logout
 session_start();
 unset($_SESSION['user_name']);
-header('refresh:5;url=../');
+header('refresh:3;url=../');
 ?>
 <!DOCTYPE html>
 <html lang="jp">
@@ -10,11 +10,11 @@ header('refresh:5;url=../');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Log out</title>
+    <title>ログアウト</title>
 </head>
 
 <body>
-    <p>ログアウトしました。5秒後にTopicsページにリダイレクトします。</p>
+    <p>ログアウトしました。3秒後に話題一覧ページにリダイレクトします。</p>
 </body>
 
 </html>

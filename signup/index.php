@@ -25,17 +25,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->execute();
     $count = $stmt->fetchColumn();
     if ($count > 0) {
-        echo 'Username is already taken.<br>';
+        echo $username . 'は既に登録されています。';
     } else if ($length > 24) {
-        echo 'Username is too long. Username must be less than 24 characters.<br>';
+        echo 'ユーザー名は24文字以内で入力してください。';
     } else {
         // insert new user into database and redirect to login page if successful
         $stmt = $pdo->prepare('insert into users (username, pwhash) values (:username, :hashedPassword)');
         $stmt->bindValue(':username', $username);
         $stmt->bindValue(':hashedPassword', $hashedPassword);
         $stmt->execute();
-        echo 'New user created. Redirecting to login page.<br>';
-        header("refresh:5;url=../login");
+        echo $username . 'を登録しました。';
+        header("refresh:3;url=../login");
+        exit();
     }
 }
 ?>
@@ -47,24 +48,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
+    <title>新規登録</title>
 </head>
 
 <body>
     <nav id="verticalnav">
         <ul>
-            <li><a href="../login">Log in</a></li>
-            <li><a href="../">Topics</a></li>
+            <li><a href="../login">ログイン</a></li>
+            <li><a href="../">話題一覧</a></li>
         </ul>
     </nav>
     <form method="post">
-        <label for="username">Username:</label>
+        <label for="username">ユーザー名：</label>
         <input type="text" id="username" name="username" required><br>
 
-        <label for="password">Password:</label>
+        <label for="password">パスワード：</label>
         <input type="password" id="password" name="password" required minlength="8"><br>
 
-        <input type="submit" value="Sign Up">
+        <input type="submit" value="登録">
     </form>
 </body>
 

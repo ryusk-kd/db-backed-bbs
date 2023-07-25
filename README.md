@@ -1,5 +1,9 @@
-# bbs-use-db
-a bbs using DB.
+# db-backed-bbs
+データベースを使ったBBSです。
 ## features
-- signup
-- login
+- 話題一覧ページ
+- 話題ページ
+- 新規登録ページ
+- ログインページ
+- ログアウトページ
+

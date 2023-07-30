@@ -2,7 +2,7 @@
 
 データベースを使ったBBSです。
 
-## ページ
+## ページ構成
 
 - 話題一覧ページ (index.php)
 - 話題ページ (topic/index.php)
@@ -10,7 +10,7 @@
 - ログインページ (login/index.php)
 - ログアウトページ (logout/index.php)
 
-## データ構造
+## データベースのデータ構造
 
 users, topics, posts の3テーブルを作成
 

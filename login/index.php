@@ -40,24 +40,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ログイン</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <nav id="verticalnav">
-        <ul>
-            <li><a href="../signup">新規登録</a></li>
-            <li><a href="../">話題一覧</a></li>
-        </ul>
-    </nav>
-    <form method="post">
-        <label for="username">ユーザー名：</label>
-        <input type="text" id="username" name="username" required><br>
-
-        <label for="password">パスワード：</label>
-        <input type="password" id="password" name="password" required><br>
-
-        <input type="submit" value="Login">
-    </form>
+    <div id="container">
+        <nav>
+            <ul>
+                <li><a href="../signup" class="nav_button">新規登録</a></li>
+                <li><a href="../" class="nav_button">話題一覧</a></li>
+            </ul>
+        </nav>
+        <form method="post">
+            <label for="username">ユーザー名：</label>
+            <input type="text" id="username" name="username" required>
+            <br>
+            <label for="password">パスワード：</label>
+            <input type="password" id="password" name="password" required>
+            <br>
+            <input type="submit" value="ログイン">
+        </form>
+    </div>
 </body>
 
 </html>

@@ -6,10 +6,10 @@ require 'function.php';
 // check login status
 session_start();
 if (!isset($_SESSION['user_name'])) {
-    $navlink = '<li><a href="login">ログイン</a></li>' .
-        '<li><a href="signup">新規登録</a></li>';
+    $navlink = '<li><a href="login" class="nav_button">ログイン</a></li>' .
+        '<li><a href="signup" class="nav_button">新規登録</a></li>';
 } else {
-    $navlink = '<li><a href="logout">ログアウト</a></li>';
+    $navlink = '<li><a href="logout" class="nav_button">ログアウト</a></li>';
 }
 
 // connect to db
@@ -56,30 +56,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>話題一覧</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <nav id="verticalnav">
-        <ul>
-            <?php echo $navlink; ?>
-            <li><a href="#post">新しい話題</a></li>
-        </ul>
-    </nav>
-    <h1>話題一覧</h1>
-    <div id="topics">
-        <?php echo $topics; ?>
-    </div>
-    <hr>
-    <h2>新しい話題</h2>
-    <div id="post">
-        <form action="" method="post">
-            <p>
+    <div id="container">
+        <nav>
+            <ul>
+                <?php echo $navlink; ?>
+                <li><label class="nav_button" for="postcheck">新しい話題</label></li>
+            </ul>
+        </nav>
+        <div id="topics">
+            <h1>話題一覧</h1>
+            <?php echo $topics; ?>
+        </div>
+        <input type="checkbox" id="postcheck" hidden>
+        <div id="post">
+            <h2>新しい話題</h2>
+            <form action="" method="post">
                 <input type="text" placeholder="タイトルを入力" name="title">
-            </p>
-            <p>
                 <textarea name="content" placeholder="概要を入力" cols="30" rows="10"></textarea>
-            </p>
-            <input type="submit" value="投稿">
+                <input type="submit" value="投稿">
+            </form>
+        </div>
     </div>
 </body>
 

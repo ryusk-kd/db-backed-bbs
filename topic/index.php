@@ -6,10 +6,10 @@ require '../function.php';
 // check login status
 session_start();
 if (!isset($_SESSION['user_name'])) {
-    $navlink = '<li><a href="../login">ログイン</a></li>' .
-        '<li><a href="../signup">新規登録</a></li>';
+    $navlink = '<li><a href="../login" class="nav_button">ログイン</a></li>' .
+        '<li><a href="../signup" class="nav_button">新規登録</a></li>';
 } else {
-    $navlink = '<li><a href="../logout">ログアウト</a></li>';
+    $navlink = '<li><a href="../logout" class="nav_button">ログアウト</a></li>';
 }
 
 // connect to db
@@ -68,26 +68,28 @@ foreach ($fetchedPosts as $post) {
 </head>
 
 <body>
-    <nav id="verticalnav">
-        <ul>
-            <?php echo $navlink; ?>
-            <li><a href="../index.php">話題一覧</a></li>
-            <li><a href="#post">コメント</a></li>
-        </ul>
-    </nav>
-    <div id="topic">
-        <h1><?php echo $title; ?></h1>
-        <p class="outline"><?php echo $outline; ?></p>
-        <?php echo $posts; ?>
-    </div>
-    <hr>
-    <h2>コメント</h2>
-    <div id="post">
-        <form action="" method="post">
-            <input type="hidden" name="topic_id" value="<?php echo $_GET['id']; ?>">
-            <textarea name="content" id="" cols="30" rows="10"></textarea>
-            <input type="submit" value="投稿">
-        </form>
+    <div id="container">
+        <nav>
+            <ul>
+                <?php echo $navlink; ?>
+                <li><a href="../index.php" class="nav_button">話題一覧</a></li>
+                <li><label for="postcheck" class="nav_button">コメント</a></li>
+            </ul>
+        </nav>
+        <div id="topic">
+            <h1><?php echo $title; ?></h1>
+            <p class="outline"><?php echo $outline; ?></p>
+            <?php echo $posts; ?>
+        </div>
+        <input type="checkbox" id="postcheck" hidden>
+        <div id="post">
+            <h2>コメント</h2>
+            <form action="" method="post">
+                <input type="hidden" name="topic_id" value="<?php echo $_GET['id']; ?>">
+                <textarea name="content" id="" cols="30" rows="10"></textarea>
+                <input type="submit" value="投稿">
+            </form>
+        </div>
     </div>
 </body>
 

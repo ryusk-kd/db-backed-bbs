@@ -17,6 +17,17 @@ $pdo = db_connect();
 
 // check $_POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // character count validation
+    $contentLength = mb_strlen(trim(preg_replace('/\s+/u', ' ', $_POST['content'])));
+    if ($contentLength < 1) {
+        echo "本文を入力してください。";
+        exit();
+    }
+    $contentLength = mb_strlen($_POST['content']);
+    if ($contentLength > 400) {
+        echo "本文は400文字以内で入力してください。({$contentLength}文字)";
+        exit();
+    }
     // sanitize $_POST['content']
     $_POST['content'] = htmlspecialchars($_POST['content']);
     $stmt = $pdo->prepare('insert into posts (topic_id, content) values (:topic_id, :content)');
@@ -86,7 +97,7 @@ foreach ($fetchedPosts as $post) {
             <h2>コメント</h2>
             <form action="" method="post">
                 <input type="hidden" name="topic_id" value="<?php echo $_GET['id']; ?>">
-                <textarea name="content" id="" cols="30" rows="10"></textarea>
+                <textarea name="content" id="" cols="30" rows="10" required></textarea>
                 <input type="submit" value="投稿">
             </form>
         </div>

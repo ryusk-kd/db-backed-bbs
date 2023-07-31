@@ -17,6 +17,23 @@ $pdo = db_connect();
 
 // check $_POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // character count validation
+    if (mb_strlen(trim(preg_replace('/\s+/u', ' ', $_POST['title']))) < 1) {
+        echo "タイトルを入力してください。";
+        exit();
+    }
+    if (mb_strlen(trim(preg_replace('/\s+/u', ' ', $_POST['content']))) < 1) {
+        echo "本文を入力してください。";
+        exit();
+    }
+    if (mb_strlen($_POST['title']) > 30) {
+        echo "タイトルは30文字以内で入力してください。";
+        exit();
+    } elseif (mb_strlen($_POST['content']) > 400) {
+        echo "本文は400文字以内で入力してください。";
+        exit();
+    }
+
     // sanitize title and content in $_POST
     $_POST['title'] = htmlspecialchars($_POST['title']);
     $_POST['content'] = htmlspecialchars($_POST['content']);
@@ -75,8 +92,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div id="post">
             <h2>新しい話題</h2>
             <form action="" method="post">
-                <input type="text" placeholder="タイトルを入力" name="title">
-                <textarea name="content" placeholder="概要を入力" cols="30" rows="10"></textarea>
+                <input type="text" placeholder="タイトルを入力" name="title" required>
+                <textarea name="content" placeholder="概要を入力" cols="30" rows="10" required></textarea>
                 <input type="submit" value="投稿">
             </form>
         </div>

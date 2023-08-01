@@ -85,3 +85,7 @@ nav>ul {
     max-width: 30rem;
     max-height: 12rem;
 }
+
+.outline, .content {
+    overflow-wrap: break-word;
+}

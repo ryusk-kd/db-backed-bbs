@@ -44,7 +44,7 @@ $stmt->bindValue(':id', $_GET['id']);
 $stmt->execute();
 $topic = $stmt->fetch(PDO::FETCH_ASSOC);
 $title = $topic['title'];
-$outline = $topic['content'];
+$outline = nl2br($topic['content']);
 
 // load posts
 $stmt = $pdo->prepare('select post_id, content, created_at from posts where topic_id = :topic_id');
@@ -59,7 +59,7 @@ foreach ($fetchedPosts as $post) {
     $posts .= '<p class="post">' .
         '<span class="post_number">' . $postNumber . ': </span>' .
         '<span class="date">' . $post['created_at'] . ' </span>' .
-        '<span class="content">' . $post['content'] . ' </span>' .
+        '<span class="content">' . nl2br($post['content']) . ' </span>' .
         '</p>';
     $postNumber++;
 }

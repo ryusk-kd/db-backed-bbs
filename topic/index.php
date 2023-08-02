@@ -56,11 +56,14 @@ $fetchedPosts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $posts = '';
 $postNumber = 1;
 foreach ($fetchedPosts as $post) {
-    $posts .= '<p class="post">' .
+    $posts .= '<div>' .
+        '<p class="post">' .
         '<span class="post_number">' . $postNumber . ': </span>' .
         '<span class="date">' . $post['created_at'] . ' </span>' .
         '<span class="content">' . nl2br($post['content']) . ' </span>' .
-        '</p>';
+        '</p>' .
+        '<div class="gradientscreen"></div>' .
+        '</div>';
     $postNumber++;
 }
 ?>

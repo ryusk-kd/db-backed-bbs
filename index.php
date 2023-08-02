@@ -59,7 +59,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $outline = $topic['content'];
         $id = $topic['topic_id'];
         $topics .= '<li><a href="./topic/?id=' . $id . '">' .
-            '<h2>' . $title . '</h2>' . '<p>' . $outline . '</p>' . '</a></li>';
+            '<h2>' . $title . '</h2>' . '<p>' . $outline . '</p>' . '</a>' .
+            '<div class="gradientscreen"></div></li>';
     }
     $topics .= '</ul>';
 }

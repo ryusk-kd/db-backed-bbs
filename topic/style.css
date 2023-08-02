@@ -45,29 +45,39 @@ nav>ul {
 #topic>p.outline {
     padding-left: 1rem;
 }
-#topic>p.post {
+#topic>div>p.post {
     color: #fff;
     background-color: #000;
-    margin: 0.4rem 0;
+    margin: 0.1rem 0;
     padding: 0.2rem 1rem 0 1rem;
     border-radius: 1rem;
     overflow: hidden;
 }
-#topic>p.post>span.post_number, #topic>p.post>span.date {
+#topic>div>p.post>span.post_number, #topic>div>p.post>span.date {
     font-size: smaller;
 }
-#topic>p.post>span.content {
+#topic>div>p.post>span.content {
     display: block;
     margin: 0.2rem 0 0.2rem 1rem;
     max-height: 6rem;
-    background: linear-gradient(180deg, #fff, #fff 4.6rem, #000 5.8rem);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
 }
-#topic>p.post:hover>span.content {
+#topic>div:hover>p.post>span.content {
     max-height: fit-content;
-    -webkit-text-fill-color: white;
+}
+#topic>div {
+    position: relative;
+    overflow-y: hidden;
+}
+#topic>div>div.gradientscreen {
+    position: absolute;
+    top: 6.6rem;
+    height: 1.6rem;
+    width: 100%;
+    border-radius: 1rem;
+    background: linear-gradient(180deg, transparent, #000 1.2rem);
+}
+#topic>div:hover>div.gradientscreen {
+    display: none;
 }
 
 /* #post */
@@ -87,5 +97,6 @@ nav>ul {
 }
 
 .outline, .content {
-    overflow-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

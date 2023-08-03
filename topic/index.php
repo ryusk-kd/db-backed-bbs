@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_name'])) {
     $navlink = '<li><a href="../login" class="nav_button">ログイン</a></li>' .
         '<li><a href="../signup" class="nav_button">新規登録</a></li>';
 } else {
-    $navlink = '<li><a href="../logout" class="nav_button">ログアウト</a></li>';
+    $navlink = '<li><a href="../account" class="nav_button">アカウント</a></li>';
 }
 
 // connect to db
@@ -24,15 +24,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
     $contentLength = mb_strlen($_POST['content']);
-    if ($contentLength > 400) {
-        echo "本文は400文字以内で入力してください。({$contentLength}文字)";
+    if ($contentLength > 2000) {
+        echo "本文は2000文字以内で入力してください。({$contentLength}文字)";
         exit();
     }
     // sanitize $_POST['content']
     $_POST['content'] = htmlspecialchars($_POST['content']);
-    $stmt = $pdo->prepare('insert into posts (topic_id, content) values (:topic_id, :content)');
+    $stmt = $pdo->prepare('insert into posts (topic_id, content, username) values (:topic_id, :content, :username)');
     $stmt->bindValue(':topic_id', $_GET['id']);
     $stmt->bindValue(':content', $_POST['content']);
+    $stmt->bindValue(':username', $_SESSION['user_name']);
     $stmt->execute();
     header('Location: index.php?id=' . $_GET['id']);
     exit();

@@ -1,0 +1,69 @@
+/* pin header */
+html, body {
+    margin: 0;
+}
+#container {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* nav */
+nav>ul {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background-color: #333;
+    color: #fff;
+}
+.nav_button {
+    display: block;
+    padding: 10px;
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.nav_button:hover {
+    background-color: #000;
+}
+
+/* #posts */
+#posts {
+    flex: 1;
+    overflow-y: scroll;
+    margin: 2px;
+}
+#posts>div {
+    display: flex;
+    justify-content: space-between;
+    background: #333;
+    color: #ddd;
+    border-radius: 1rem;
+    margin-bottom: 0.1rem;
+}
+#posts>div:hover {
+    background: black;
+    color: white;
+}
+#posts>div>p.post {
+    margin: 0.1rem 0;
+    padding: 0.2rem 1rem 0 1rem;
+    overflow: hidden;
+}
+#posts>div>p.post>span.post_number, #posts>div>p.post>span.date {
+    font-size: smaller;
+}
+#posts>div>p.post>span.content {
+    display: block;
+    margin: 0.2rem 0 0.2rem 1rem;
+    max-height: fit-content;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

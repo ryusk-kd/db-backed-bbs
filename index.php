@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_name'])) {
     $navlink = '<li><a href="login" class="nav_button">ログイン</a></li>' .
         '<li><a href="signup" class="nav_button">新規登録</a></li>';
 } else {
-    $navlink = '<li><a href="logout" class="nav_button">ログアウト</a></li>';
+    $navlink = '<li><a href="account" class="nav_button">アカウント</a></li>';
 }
 
 // connect to db

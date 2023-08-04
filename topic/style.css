@@ -46,8 +46,8 @@ nav>ul {
     padding-left: 1rem;
 }
 #topic>div>p.post {
-    color: #fff;
-    background-color: #000;
+    color: #ddd;
+    background-color: #333;
     margin: 0.1rem 0;
     padding: 0.2rem 1rem 0 1rem;
     border-radius: 1rem;
@@ -78,6 +78,10 @@ nav>ul {
 }
 #topic>div:hover>div.gradientscreen {
     display: none;
+}
+#topic>div:hover>p.post {
+    color: #fff;
+    background-color: #000;
 }
 
 /* #post */

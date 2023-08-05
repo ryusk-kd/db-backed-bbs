@@ -1,45 +1,39 @@
 <?php
-// include db_connect.php, function.php
+// Include necessary files
 require '../db_connect.php';
 require '../function.php';
 
-// Session start and Unset $_SESSION['user_name']
+// Start session and unset user_name session variable
 session_start();
 unset($_SESSION['user_name']);
 
-// db connect
+// Connect to the database
 $pdo = db_connect();
 
-// check $_POST
+// Check if the request method is POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // sanitize username; username must be less than 24 characters
+    // Sanitize and validate the username input
     $username = htmlspecialchars($_POST['username']);
     $length = mb_strlen($username);
 
-    // get hashed password
+    // Hash the password
     $hashedPassword = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-    // check username
-    $stmt = $pdo->prepare('select count(*) from users where username = :username');
-    $stmt->bindValue(':username', $username);
-    $stmt->execute();
-    $count = $stmt->fetchColumn();
-    if ($count > 0) {
+    // Check if the username already exists
+    if (check_user_name_exists($pdo, $username) > 0) {
         echo $username . 'は既に登録されています。';
     } else if ($length > 24) {
         echo 'ユーザー名は24文字以内で入力してください。';
     } else {
-        // insert new user into database and redirect to login page if successful
-        $stmt = $pdo->prepare('insert into users (username, pwhash) values (:username, :hashedPassword)');
-        $stmt->bindValue(':username', $username);
-        $stmt->bindValue(':hashedPassword', $hashedPassword);
-        $stmt->execute();
+        // Insert the new user into the database and redirect to the login page
+        insert_user($pdo, $username, $hashedPassword);
         echo $username . 'を登録しました。';
         header("refresh:3;url=../login");
         exit();
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="ja">

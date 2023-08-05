@@ -12,20 +12,19 @@ define('DB_PASSWORD', $data['password']);
 define('PDO_DSN', 'mysql:host=localhost;charset=utf8mb4;dbname=' . DB_DATABASE);
 
 /**
- * DBの接続設定をしたPDOインスタンスを返却する
- * @return object
+ * Returns a PDO instance with the configured DB connection settings.
+ *
+ * @return PDO Returns a PDO instance with the configured DB connection settings.
  */
 function db_connect()
 {
     try {
-        // PDOインスタンスの作成
         $pdo = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
-        // エラー処理方法の設定
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         return $pdo;
     } catch (PDOException $e) {
+        // Print the error message and terminate the script
         echo 'Error: ' . $e->getMessage();
-        echo PDO_DSN;
         die();
     }
 }

@@ -1,43 +1,47 @@
 <?php
-// include db_connect.php, function.php
+// Include necessary files
 require '../db_connect.php';
 require '../function.php';
 
-// check login status
+// Check login status
 session_start();
 if (!isset($_SESSION['user_name'])) {
-    // go to login
-    echo 'ログインしてください。';
+    // Redirect to login page if user is not logged in
+    echo 'ログインしてください。';
     header('refresh:3;url=../login');
     exit();
 } else {
-    $navlink = '<li><a href="../logout" class="nav_button">ログアウト</a></li>';
+    // Display logout button if user is logged in
+    $navlink = '<li><a href="../logout" class="nav_button">ログアウト</a></li>';
 }
 
-// connect to db
+// Connect to the database
 $pdo = db_connect();
 
-// check $_POST
+// Check if the request method is POST and post_id is set
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['post_id'])) {
-    // delete post
+    // Delete post
     $post_id = $_POST['post_id'];
     if (delete_post($pdo, $post_id)) {
+        // Redirect to current page after successful deletion
         header('Location: ./');
     } else {
+        // Display error message if deletion fails
         echo '削除に失敗しました。';
         header('refresh:3;url=./');
         exit();
     }
 }
 
-// get posts
-$stmt = $pdo->prepare('select * from posts where username = :username');
+// Get posts for current user
+$stmt = $pdo->prepare('SELECT * FROM posts WHERE username = :username');
 $stmt->bindValue(':username', $_SESSION['user_name']);
 $stmt->execute();
 $fetchedPosts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $posts = '';
 $postNumber = 1;
 foreach ($fetchedPosts as $post) {
+    // Generate HTML for each post
     $posts .= '<div>' .
         '<p class="post">' .
         '<span class="post_number">' . $postNumber . ': </span>' .

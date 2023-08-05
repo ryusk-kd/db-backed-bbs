@@ -17,46 +17,49 @@ $pdo = db_connect();
 
 // check $_POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // character count validation
-    if (mb_strlen(trim(preg_replace('/\s+/u', ' ', $_POST['title']))) < 1) {
+    // Title and Content length validation
+    $title = trim($_POST['title']);
+    $content = trim($_POST['content']);
+
+    // Check if title is empty
+    if (mb_strlen(preg_replace('/\s+/u', '', $title)) < 1) {
         echo "タイトルを入力してください。";
         exit();
     }
-    if (mb_strlen(trim(preg_replace('/\s+/u', ' ', $_POST['content']))) < 1) {
+
+    // Check if content is empty
+    if (mb_strlen(preg_replace('/\s+/u', '', $content)) < 1) {
         echo "本文を入力してください。";
         exit();
     }
-    if (mb_strlen($_POST['title']) > 30) {
+
+    // Check if title exceeds 30 characters
+    if (mb_strlen($title) > 30) {
         echo "タイトルは30文字以内で入力してください。";
-        exit();
-    } elseif (mb_strlen($_POST['content']) > 400) {
-        echo "本文は400文字以内で入力してください。";
         exit();
     }
 
-    // sanitize title and content in $_POST
-    $_POST['title'] = htmlspecialchars($_POST['title']);
-    $_POST['content'] = htmlspecialchars($_POST['content']);
+    // Check if content exceeds 2000 characters
+    if (mb_strlen($content) > 2000) {
+        echo "本文は2000文字以内で入力してください。";
+        exit();
+    }
 
-    // insert post
-    $stmt = $pdo->prepare('insert into topics (title, content) values (:title, :content)');
-    $stmt->bindValue(':title', $_POST['title']);
-    $stmt->bindValue(':content', $_POST['content']);
-    $stmt->execute();
+    // Sanitize Title and Content
+    $title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
+    $content = htmlspecialchars($content, ENT_QUOTES, 'UTF-8');
 
-    // get post id and redirect to the topic page
-    $post_id = $pdo->lastInsertId();
+    // Insert new topic into db
+    $post_id = insert_topic($pdo, $title, $content);
     header('Location: ./topic/?id=' . $post_id);
     exit();
 } else {
-    // get topics
-    $stmt = $pdo->prepare('select * from topics');
-    $stmt->execute();
-    $fetchedTopics = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // Get all topics from db
+    $fetchedTopics = get_topics($pdo);
     $topics = '<ul>';
     foreach ($fetchedTopics as $topic) {
         $title = $topic['title'];
-        $outline = $topic['content'];
+        $outline = nl2br($topic['content']);
         $id = $topic['topic_id'];
         $topics .= '<li><a href="./topic/?id=' . $id . '">' .
             '<h2>' . $title . '</h2>' . '<p>' . $outline . '</p>' . '</a>' .

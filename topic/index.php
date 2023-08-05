@@ -1,63 +1,66 @@
 <?php
-// include db_connect.php, function.php
+// Include db_connect.php and function.php
 require '../db_connect.php';
 require '../function.php';
 
-// check login status
+// Check login status
 session_start();
+$navlink = '';
 if (!isset($_SESSION['user_name'])) {
-    $navlink = '<li><a href="../login" class="nav_button">ログイン</a></li>' .
-        '<li><a href="../signup" class="nav_button">新規登録</a></li>';
+    $navlink .= '<li><a href="../login" class="nav_button">ログイン</a></li>';
+    $navlink .= '<li><a href="../signup" class="nav_button">新規登録</a></li>';
+    $username = null;
 } else {
-    $navlink = '<li><a href="../account" class="nav_button">アカウント</a></li>';
+    $navlink .= '<li><a href="../account" class="nav_button">アカウント</a></li>';
+    $username = $_SESSION['user_name'];
 }
 
-// connect to db
+// Connect to the database
 $pdo = db_connect();
 
-// check $_POST
+// Check if the request method is POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // character count validation
-    $contentLength = mb_strlen(trim(preg_replace('/\s+/u', ' ', $_POST['content'])));
+    $content = trim($_POST['content']);
+
+    // Validate content length
+    $contentLength = mb_strlen(preg_replace('/\s+/u', '', $content));
     if ($contentLength < 1) {
         echo "本文を入力してください。";
         exit();
     }
-    $contentLength = mb_strlen($_POST['content']);
+
+    $contentLength = mb_strlen($content);
     if ($contentLength > 2000) {
         echo "本文は2000文字以内で入力してください。({$contentLength}文字)";
         exit();
     }
-    // sanitize $_POST['content']
-    $_POST['content'] = htmlspecialchars($_POST['content']);
-    $stmt = $pdo->prepare('insert into posts (topic_id, content, username) values (:topic_id, :content, :username)');
-    $stmt->bindValue(':topic_id', $_GET['id']);
-    $stmt->bindValue(':content', $_POST['content']);
-    $stmt->bindValue(':username', $_SESSION['user_name']);
-    $stmt->execute();
+
+    // Sanitize the content
+    $sanitizedContent = htmlspecialchars($content);
+
+    // Insert the post into the database
+    insert_post($pdo, $_GET['id'], $sanitizedContent, $username);
+
+    // Redirect to the index page
     header('Location: index.php?id=' . $_GET['id']);
     exit();
 }
 
-// get topic
-$stmt = $pdo->prepare('select * from topics where topic_id = :id');
-$stmt->bindValue(':id', $_GET['id']);
-$stmt->execute();
-$topic = $stmt->fetch(PDO::FETCH_ASSOC);
-$title = $topic['title'];
-$outline = nl2br($topic['content']);
+// Retrieve the title and outline of the topic
+$topic = get_topic_by_id($pdo, $_GET['id']);
 
-// load posts
-$stmt = $pdo->prepare('select post_id, content, created_at from posts where topic_id = :topic_id');
-$stmt->bindValue(':topic_id', $_GET['id']);
-$stmt->execute();
+// Retrieves the posts of a given topic from the database.
+$fetchedPosts = get_posts_of_topic($pdo, $_GET['id']);
 
-// fetch posts
-$fetchedPosts = $stmt->fetchAll(PDO::FETCH_ASSOC);
-$posts = '';
+// Initialize a variable to store the generated HTML
+$html = '';
+
+// Initialize a counter for the post number
 $postNumber = 1;
+
+// Loop through each fetched post and generate the HTML
 foreach ($fetchedPosts as $post) {
-    $posts .= '<div>' .
+    $html .= '<div>' .
         '<p class="post">' .
         '<span class="post_number">' . $postNumber . ': </span>' .
         '<span class="date">' . $post['created_at'] . ' </span>' .
@@ -65,8 +68,14 @@ foreach ($fetchedPosts as $post) {
         '</p>' .
         '<div class="gradientscreen"></div>' .
         '</div>';
+
+    // Increment the post number
     $postNumber++;
 }
+
+// Assign the generated HTML to the variable
+$posts = $html;
+
 ?>
 
 
@@ -77,7 +86,7 @@ foreach ($fetchedPosts as $post) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
-        <?php echo $title; ?>
+        <?php echo $topic['title']; ?>
     </title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -92,8 +101,8 @@ foreach ($fetchedPosts as $post) {
             </ul>
         </nav>
         <div id="topic">
-            <h1><?php echo $title; ?></h1>
-            <p class="outline"><?php echo $outline; ?></p>
+            <h1><?php echo $topic['title']; ?></h1>
+            <p class="outline"><?php echo nl2br($topic['content']); ?></p>
             <?php echo $posts; ?>
         </div>
         <input type="checkbox" id="postcheck" hidden>

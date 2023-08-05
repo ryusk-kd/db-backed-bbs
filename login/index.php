@@ -1,36 +1,35 @@
 <?php
-// include db_connect.php, function.php
+// Include necessary files
 require '../db_connect.php';
 require '../function.php';
 
-// Session start and Unset $_SESSION['user_name']
+// Start session and unset user_name session variable
 session_start();
 unset($_SESSION['user_name']);
 
-// db connect
+// Connect to the database
 $pdo = db_connect();
 
-// check login
+// Check if the request method is POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // sanitize username in $_POST; set $username and $password
+    // Sanitize and retrieve the username and password from $_POST
     $username = htmlspecialchars($_POST['username']);
     $password = $_POST['password'];
 
-    // check username and password
-    $stmt = $pdo->prepare('select pwhash from users where username = :username');
-    $stmt->bindValue(':username', $username);
-    $stmt->execute();
-    $hashedPassword = $stmt->fetchColumn();
-    if ($hashedPassword !== false && password_verify($password, $hashedPassword)) {
+    // Check the username and password
+    if (authenticateUser($pdo, $username, $password)) {
+        // Login successful
         echo 'ログインしました。';
         $_SESSION['user_name'] = $username;
         header("refresh:3;url=../");
         exit();
     } else {
+        // Login failed
         echo 'ログインに失敗しました。';
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="ja">

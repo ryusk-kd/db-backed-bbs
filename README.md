@@ -9,6 +9,7 @@
 - 新規登録ページ (signup/index.php)
 - ログインページ (login/index.php)
 - ログアウトページ (logout/index.php)
+- アカウントページ (account/index.php)
 
 ## データベースのデータ構造
 
@@ -39,3 +40,4 @@ users, topics, posts の3テーブルを作成
 | topic_id | int(11) | NO | MUL | NULL | |
 | content | text | NO | | NULL | |
 | created_at | timestamp | NO | | current_timestamp() | on update current_timestamp() |
+| username | varchar(24) | YES | MUL | NULL | |

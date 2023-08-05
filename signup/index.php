@@ -1,40 +1,39 @@
 <?php
-// debug
-// ini_set('display_errors', 'On');
-
-// include db_connect.php
+// Include necessary files
 require '../db_connect.php';
-
-// include function.php
 require '../function.php';
 
-if (isset($_POST) && !empty($_POST)) {
-    // validate input data
+// Start session and unset user_name session variable
+session_start();
+unset($_SESSION['user_name']);
+
+// Connect to the database
+$pdo = db_connect();
+
+// Check if the request method is POST
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Sanitize and validate the username input
     $username = htmlspecialchars($_POST['username']);
-    $hashedPassword = password_hash($_POST['password'], PASSWORD_DEFAULT);
     $length = mb_strlen($username);
 
-    // check username
-    $pdo = db_connect();
-    $stmt = $pdo->prepare('select count(*) from users where username = :username');
-    $stmt->bindValue(':username', $username);
-    $stmt->execute();
-    $count = $stmt->fetchColumn();
-    if ($count > 0) {
-        echo 'Username is already taken.<br>';
+    // Hash the password
+    $hashedPassword = password_hash($_POST['password'], PASSWORD_DEFAULT);
+
+    // Check if the username already exists
+    if (check_user_name_exists($pdo, $username) > 0) {
+        echo $username . 'は既に登録されています。';
     } else if ($length > 24) {
-        echo 'Username is too long. Username must be less than 24 characters.<br>';
+        echo 'ユーザー名は24文字以内で入力してください。';
     } else {
-        // insert new user into database and redirect to login page if successful
-        $stmt = $pdo->prepare('insert into users (username, pwhash) values (:username, :hashedPassword)');
-        $stmt->bindValue(':username', $username);
-        $stmt->bindValue(':hashedPassword', $hashedPassword);
-        $stmt->execute();
-        echo 'New user created. Redirecting to login page.<br>';
-        header("refresh:5;url=../login");
+        // Insert the new user into the database and redirect to the login page
+        insert_user($pdo, $username, $hashedPassword);
+        echo $username . 'を登録しました。';
+        header("refresh:3;url=../login");
+        exit();
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="ja">
@@ -43,19 +42,28 @@ if (isset($_POST) && !empty($_POST)) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>新規登録</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <form method="post">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required><br>
-
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required minlength="8"><br>
-
-        <input type="submit" value="Sign Up">
-    </form>
+    <div id="container">
+        <nav>
+            <ul>
+                <li><a href="../login" class="nav_button">ログイン</a></li>
+                <li><a href="../" class="nav_button">話題一覧</a></li>
+            </ul>
+        </nav>
+        <form method="post">
+            <label for="username">ユーザー名：</label>
+            <input type="text" id="username" name="username" required>
+            <br>
+            <label for="password">パスワード：</label>
+            <input type="password" id="password" name="password" required minlength="8">
+            <br>
+            <input type="submit" value="登録">
+        </form>
+    </div>
 </body>
 
 </html>
